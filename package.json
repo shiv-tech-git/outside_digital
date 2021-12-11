@@ -1,0 +1,32 @@
+{
+  "name": "outside_digital",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "cross-env NODE_ENV=test jest"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ]
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "cross-env": "^7.0.3",
+    "dotenv": "^10.0.0",
+    "email-validator": "^2.0.4",
+    "express": "^4.17.1",
+    "install": "^0.13.0",
+    "jest": "^27.4.4",
+    "jsonwebtoken": "^8.5.1",
+    "jwt-blacklist": "^0.1.2",
+    "npm": "^8.3.0",
+    "password-validator": "^5.2.1",
+    "pg": "^8.7.1",
+    "supertest": "^6.1.6"
+  }
+}
