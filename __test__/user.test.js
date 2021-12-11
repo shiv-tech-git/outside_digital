@@ -2,6 +2,8 @@ const request = require('supertest')
 const app = require('../index')
 const { createTestUser, loginAsTestUser, deleteUserByToken, sleep } = require('./test_utils');
 
+
+
 it('GET /user', async () => {
 	const token = await createTestUser(30);
 

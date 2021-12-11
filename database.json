@@ -3,7 +3,7 @@
       "driver": "pg",
       "user": "postgres",
       "password": "postgres",
-      "host": "0.0.0.0",
+      "host": "postgres",
       "database": "postgres"
     }
 }

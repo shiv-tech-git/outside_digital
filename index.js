@@ -20,9 +20,7 @@ app.use('/user/tag', checkToken, user_tag_router);
 app.use('/', auth_router);
 app.use('/update_token', checkToken, token_router);
 
-app.post('/test', (req, res) => {
-	res.send({test: "test"});
-})
+app.get('/ping', (req, res) => {res.send("PONG");})
 
 if (process.env.NODE_ENV != "test") {
 	app.listen(process.env.EXPRESS_PORT, () => {

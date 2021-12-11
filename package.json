@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "cross-env NODE_ENV=test jest"
+    "test": "cross-env NODE_ENV=test jest --testTimeout=5000"
   },
   "jest": {
     "testEnvironment": "node",
@@ -17,6 +17,8 @@
   "dependencies": {
     "bcrypt": "^5.0.1",
     "cross-env": "^7.0.3",
+    "db-migrate": "^0.11.13",
+    "db-migrate-pg": "^1.2.2",
     "dotenv": "^10.0.0",
     "email-validator": "^2.0.4",
     "express": "^4.17.1",

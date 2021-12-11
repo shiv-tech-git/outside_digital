@@ -1,0 +1,23 @@
+version: "3.7"
+services:
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - '5432:5432'
+
+  user_tag_server:
+    build:
+      context: .
+    environment:
+      DB_SCHEMA: postgres
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_HOST: postgres
+    depends_on:
+      - postgres
+    ports:
+      - '3000:3000'
+    command: /bin/bash -c "./wait-for-postgres.sh postgres:5432 -t 0 -- echo echo hello && ./node_modules/db-migrate/bin/db-migrate up initialize && node index.js"

@@ -9,7 +9,7 @@ module.exports.createTestUser = async (number) => {
 			password: `Test_user${number}`,
 			nickname: `test_user${number}`
 		})
-	expect(res.status).toEqual(201)
+	expect(res.status).toEqual(200)
 	return res.body.token;
 }
 

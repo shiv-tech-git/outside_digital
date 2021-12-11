@@ -22,7 +22,7 @@ const pool = new Client({
 })
 
 async function dbConnect() {
-	let retries = 5;
+	let retries = 10;
 	while (retries) {
 		try {
 			await pool.connect();
