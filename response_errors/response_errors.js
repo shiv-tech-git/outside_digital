@@ -44,7 +44,7 @@ module.exports = {
 		error_code: 11
 	},
 	invalid_tag_id_or_creator: {
-		error_message:  "Tag id belongs to another user or don't exist.",
+		error_message:  "Tag with given id belongs to another user or don't exist.",
 		error_code: 12
 	},
 	tag_name_exists: {

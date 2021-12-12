@@ -29,6 +29,8 @@
     "npm": "^8.3.0",
     "password-validator": "^5.2.1",
     "pg": "^8.7.1",
-    "supertest": "^6.1.6"
+    "supertest": "^6.1.6",
+    "swagger-jsdoc": "^6.1.0",
+    "swagger-ui-express": "^4.2.0"
   }
 }

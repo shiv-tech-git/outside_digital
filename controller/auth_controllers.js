@@ -65,14 +65,7 @@ module.exports.signin = async (req, res) => {
 
 module.exports.logout = async (req, res) => {
 	const user_token = jwt_handler.getBearerToken(req.headers);
-	if(user_token && await jwt_handler.check(user_token)) {
-		await jwt_handler.addToBlacklist(user_token);
-		logger.log(`User ${res.locals.user.nickname} has logged out.`);
-		res.status(200).send({ message: "Logged out." });
-		return;
-	} else {
-		logger.errorLog("Logging out without valid token.");
-		res.status(400).send({ message: "You are not logged in." });
-		return;
-	}
+	await jwt_handler.addToBlacklist(user_token);
+	logger.log(`User ${res.locals.user.nickname} has logged out.`);
+	res.status(200).send({ message: "Logged out." });
 }

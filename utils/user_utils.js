@@ -18,7 +18,7 @@ function checkUserData(req, res) {
 	const user_data = getUserData(req.body);
 	if (!user_data) {
 		logger.errorLog("Invalid request", req.body);
-		res.status(400).send({ error: response_error.singin_req_json});
+		res.status(400).send(response_error.singin_req_json);
 		return null;
 	}
 

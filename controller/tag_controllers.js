@@ -143,8 +143,12 @@ module.exports.deleteTag = async (req, res) => {
 
 async function tryDeleteTag(res, tag_data) {
 	try {
-		db.deleteTag(tag_data);
-		res.status(200).send();
+		const result = await db.deleteTag(tag_data);
+		if (result) {
+			res.status(200).send({message: "Tag has been deleted."});
+		} else {
+			res.status(400).send(response_error.invalid_tag_id_or_creator);
+		}
 	} catch (err) {
 		logger.errorLog(err.message);
 		res.status(500).send(response_error.unexpectable_error);

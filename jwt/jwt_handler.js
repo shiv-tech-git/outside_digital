@@ -30,7 +30,8 @@ const create = (body) => {
 };
 
 const check = async (token) => {
-	if (await isInBlacklist(token)) {
+	const is_in_black_list = await isInBlacklist(token)
+	if (is_in_black_list) {
 		return false;
 	}
 
