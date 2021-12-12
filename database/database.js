@@ -46,10 +46,15 @@ const deleteUserTag = (tag_data) => {
 	return psql.deleteUserTag(tag_data);
 }
 
-const selectUserTag = (uid) => {
-	return psql.selectUserTag(uid);
+const selectUserTags = (uid) => {
+	return psql.selectUserTags(uid);
 }
 
+const updateUser = (user_data) => {
+	return psql.updateUser(user_data);
+}
+
+const errorAnalyzer = psql.errorAnalyzer;
 
 module.exports = {
 	insertUser,
@@ -63,6 +68,8 @@ module.exports = {
 	deleteTag,
 	insertUserTags,
 	deleteUserTag,
-	selectUserTag,
+	selectUserTags,
+	updateUser,
+	errorAnalyzer,
 	error
 }

@@ -36,17 +36,19 @@ const insertUser = (user_data) => {
 }
 
 const selectUser = async (email) => {
-	const result = await client.query(`SELECT * FROM users WHERE email='${email}'`);
+	const query = `SELECT * FROM users WHERE email='${email}'`;
+	const result = await client.query(query);
 	return result.rows[0];
 }
 
 const selectTagsByUid = async (uid) => {
-	const result = await client.query(`SELECT * FROM tags WHERE creator='${uid}'`);
+	const query = `SELECT tags.id, tags.name, tags.sortorder FROM user_tag LEFT JOIN tags ON tags.id=user_tag.tag_id WHERE user_tag.user_id='${uid}'`;
+	const result = await client.query(query);
 	return result.rows.map( tag => { return {id: tag.id, name: tag.name, sortOrder: tag.sortorder}});
 }
 
 const selectTagList = async (params) => {
-	let query = "SELECT count(*) OVER() AS quantity, t.name, t.sortorder, u.nickname, u.uid FROM tags t LEFT JOIN users u ON t.creator=u.uid ";
+	let query = "SELECT count(*) OVER() AS quantity, t.name, t.sortorder, t.id, u.nickname, u.uid FROM tags t LEFT JOIN users u ON t.creator=u.uid ";
 	let meta = {};
 
 	if (params.hasOwnProperty("sortByOrder")) {
@@ -116,15 +118,21 @@ const deleteTag = async (tag_data) => {
 }
 
 const insertUserTags = async (tags_data) => {
-	let query = `BEGIN; `
+	let query = '';
+	query += `BEGIN; `;
 	tags_data.tags.forEach(item => {
 		query += `INSERT INTO user_tag (user_id, tag_id) SELECT '${tags_data.uid}', '${item}' WHERE NOT EXISTS (SELECT user_tag.user_id, user_tag.tag_id FROM user_tag WHERE user_tag.user_id='${tags_data.uid}' AND user_tag.tag_id='${item}'); `
 	});
 	query += "COMMIT;";
 	query += `SELECT tags.id, tags.name, tags.sortorder FROM user_tag left join tags on tags.id=user_tag.tag_id where user_tag.user_id='${tags_data.uid}';`
-	const result = await client.query(query);
-	const tags = result[tags_data.tags.length+2].rows;
-	return formatUserTags(tags);
+	try {
+		const result = await client.query(query);
+		const tags = result[tags_data.tags.length+2].rows;
+		return formatUserTags(tags);
+	} catch (err) {
+		client.query("ROLLBACK;");
+		throw err;
+	}
 }
 
 const deleteUserTag = async (tag_data) => {
@@ -135,12 +143,40 @@ const deleteUserTag = async (tag_data) => {
 	return formatUserTags(tags);
 }
 
-const selectUserTag = async (uid) => {
-	const query = `SELECT tags.id, tags.name, tags.sortorder FROM user_tag left join tags on tags.id=user_tag.tag_id where user_tag.user_id='${uid}';`
+const selectUserTags = async (uid) => {
+	const query = `SELECT id, name, sortorder FROM tags WHERE creator='${uid}';`
 	const result = await client.query(query);
 	const tags = result.rows;
 	return formatUserTags(tags);
 }
+
+const updateUser = async (user_data) => {
+	let query_counter = 0;
+	let query = "";
+	query += 'BEGIN; ';
+	if (user_data.email) {
+		query += `UPDATE users SET email='${user_data.email}' WHERE uid=${user_data.uid}; `;
+		query_counter++;
+	}
+	if (user_data.nickname) {
+		query += `UPDATE users SET nickname='${user_data.nickname}' WHERE uid=${user_data.uid}; `;
+		query_counter++;
+	}
+	if (user_data.password) {
+		query += `UPDATE users SET password='${user_data.password}' WHERE uid=${user_data.uid}; `;
+		query_counter++;
+	}
+	query += 'COMMIT; ';
+	query += `SELECT email, nickname from users WHERE uid=${user_data.uid}; `;
+	try {
+		const result = await client.query(query);
+		return result[query_counter + 2].rows[0];
+	} catch (err) {
+		client.query("ROLLBACK;");
+		throw err;
+	}
+}
+
 
 function formatUserTags(tags) {
 	const formatted_tags = tags.map(tag => {
@@ -161,9 +197,23 @@ function format_tag(tag) {
 			nickname: tag.nickname,
 			uid: tag.uid
 		},
+		id: tag.id,
 		name: tag.name,
 		sortOrder: tag.sortorder
 	}
+}
+
+function isEmailCollision(err) {
+	return err.message && err.message.includes("users_email_key")
+}
+
+function isNicknameCollision(err) {
+	return err.message && err.message.includes("users_nickname_key")
+}
+
+const errorAnalyzer = {
+	isEmailCollision,
+	isNicknameCollision
 }
 
 module.exports = {
@@ -178,7 +228,9 @@ module.exports = {
 	deleteTag,
 	insertUserTags,
 	deleteUserTag,
-	selectUserTag,
+	selectUserTags,
+	updateUser,
+	errorAnalyzer,
 	error
 }
 

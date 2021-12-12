@@ -20,29 +20,27 @@ it('GET /user', async () => {
 })
 
 it('PUT /user', async () => {
-	const token = await createTestUser(31);
-
 	let res = await request(app)
+		.post('/signin')
+		.send({
+			email: `test_user31@gmail.com`,
+			password: `Test_user31`,
+			nickname: `test_user31`
+		})
+    expect(res.status).toEqual(200)
+	const token = res.body.token;
+
+	res = await request(app)
 		.put('/user')
 		.set({ "Authorization": `Bearer ${token}` })
 		.send({
-			email: "put_user@gmail.com",
-			password: "PUT_user_42",
-			nickname: "put_user"
+			nickname: "test_user32"
 		})
+	console.log(res.body)
 	expect(res.status).toEqual(200)
-	expect(res.body).toHaveProperty('email')
 	expect(res.body).toHaveProperty('nickname')
+	expect(res.body.nickname).toEqual("test_user32")
 
-	deleteUserByToken(token);
-
-	res = await request(app)
-		.post('/login')
-		.send({
-			email: "put_user@gmail.com",
-			password: "PUT_user_42",
-		})
-	const token2 = res.body.token;
-	await deleteUserByToken(token2);
+	await deleteUserByToken(token);
 
 })

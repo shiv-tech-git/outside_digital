@@ -1,5 +1,5 @@
 const db = require('../database/database');
-const { createNewUserRoutine } = require('../utils/user_utils');
+const { updateUserRoutine } = require('../utils/user_utils');
 const logger = require('../logger/logger');
 const jwt_handler = require('../jwt/jwt_handler');
 const response_error = require('../response_errors/response_errors');
@@ -17,14 +17,9 @@ module.exports.getUser = async (req, res) => {
 }
 
 module.exports.putUser = async (req, res) => {
-	createNewUserRoutine(req, res, (res) => {
-		const user = res.locals.user;
-		const response = {
-			email: user.email,
-			nickname: user.nickname
-		}
-		logger.log(`PUT user: ${user.email}`);
-		res.status(200).send(response);
+	updateUserRoutine(req, res, (res, result) => {
+		res.status(200).send(result);
+		logger.log(`PUT user: ${result}`);
 	});
 }
 

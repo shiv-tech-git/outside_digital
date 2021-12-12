@@ -54,5 +54,13 @@ module.exports = {
 	user_tag_json: {
 		error_message:  "Invalid request. You should provide valid json with 'tags' field.",
 		error_code: 14
+	},
+	email_collision: {
+		error_message:  "User with given email already exists.",
+		error_code: 15
+	},
+	nickname_collision: {
+		error_message:  "User with given nickname already exists.",
+		error_code: 16
 	}
 }

@@ -48,7 +48,7 @@ module.exports.myTags = async (req, res) => {
 	const uid = res.locals.user.uid;
 
 	try {
-		const result = await db.selectUserTag(uid);
+		const result = await db.selectUserTags(uid);
 		res.send(result);
 	} catch (err) {
 		logger.errorLog(err.message);

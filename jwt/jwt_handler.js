@@ -23,9 +23,6 @@ const isInBlacklist = async (token) => {
 
 const create = (body) => {
 	const expiring_after = parseInt(process.env.TOKEN_EXPIRING_TIME_SEC);
-	// return jwt.sign({ body }, process.env.TOKEN_SECRET, {
-	//   expiresIn: expiring_after
-	// });
 	return jwt.sign({ body }, process.env.TOKEN_SECRET, {expiresIn: expiring_after});
 };
 
@@ -46,6 +43,7 @@ const check = async (token) => {
 		}
 		return true;
 	} catch(err) {
+		logger.errorLog("token error: ", err.message);
 		return false;
 	}
 }

@@ -10,14 +10,15 @@ const tokenRouter = require('./router/token_router');
 const { checkToken } = require('./middleware/auth_middleware');
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
+const cors = require('cors')
 
 const app = express();
 
 const swaggerOptions = {
 	swaggerDefinition: {
 		info: {
-			title: "User tag api.",
-			description: "Test task for OUTSIDE DIGITAL",
+			title: "OUTSIDE DIGITAL",
+			description: "Test task",
 			contact: {
 				name: "Shemetov Ilya Vladimirovich"
 			},
@@ -29,6 +30,7 @@ const swaggerOptions = {
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 

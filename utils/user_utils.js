@@ -44,7 +44,7 @@ async function tryToCreateNewUser(user_data, res, onsuccess){
 		await createNewUser(user_data, res, onsuccess);
 	}
 	catch(err) {
-		handleCreatingNewUserError(err, res);
+		handleDBUserError(err, res);
 	}
 }
 
@@ -54,15 +54,14 @@ async function createNewUser(user_data, res, onsuccess) {
 	return;
 }
 
-function handleCreatingNewUserError(err, res) {
-	logger.errorLog(err.message);
-	
-	switch(parseInt(err.code)) {
-		case db.error.email_already_exists:
-			res.status(400).send(response_error.email_or_login_collision);
-			break;
-		default:
-			res.status(500).send(response_error.unexpectable_error);
+function handleDBUserError(err, res) {
+	logger.errorLog(err);
+	if (db.errorAnalyzer.isEmailCollision(err)) {
+		res.status(400).send(response_error.email_collision);
+	} else if (db.errorAnalyzer.isNicknameCollision(err)) {
+		res.status(400).send(response_error.nickname_collision);
+	} else {
+		res.status(500).send(response_error.unexpectable_error);
 	}
 }
 
@@ -74,3 +73,50 @@ function getUserData(request_body) {
 		password: request_body.password,
 		nickname: request_body.nickname};
 }
+
+module.exports.updateUserRoutine = async (req, res, onsuccess) => {
+	let user_data = {};
+	user_data.uid = res.locals.user.uid;
+	//check email
+	const email = req.body.email;
+	if (email) {
+		if (email_validator.validate(email)) {
+			user_data.email = email;
+		} else {
+			logger.errorLog("Invalid email", req.body);
+			res.status(400).send({ error: response_error.invalid_email});
+			return;
+		}
+	}
+
+	//check password
+	const password = req.body.password;
+	if (password) {
+		if (password_handler.validate(password)) {
+			user_data.password = await password_handler.get_hash(password);;
+		} else {
+			logger.errorLog("Invalid password", user_data.password);
+			res.status(400).send(response_error.password_schema_validation);
+			return;
+		}
+	}
+	
+	if (req.body.nickname) {
+		user_data.nickname = req.body.nickname;
+	}
+
+	tryToUpdateUser(user_data, res, onsuccess);
+}
+
+
+async function tryToUpdateUser(user_data, res, onsuccess){
+	try {
+		const result = await db.updateUser(user_data);
+		onsuccess(res, result)
+	}
+	catch(err) {
+		handleDBUserError(err, res)
+	}
+}
+
+
