@@ -16,6 +16,7 @@ const app = express();
 
 const swaggerOptions = {
 	swaggerDefinition: {
+		openapi: "3.0.0",
 		info: {
 			title: "OUTSIDE DIGITAL",
 			description: "Test task",

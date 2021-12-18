@@ -30,11 +30,8 @@ const router = Router();
  *         examples:
  *           application/json:
  *             message: "This route demands valid token."
- *     parameters:
- *      - name: Authorization
- *        in: header
- *        description: Bearer token
- *        required: true
+ *     security:
+ *       - bearerAuth: []
  */
 router.get('/', getUser);
 
@@ -59,28 +56,28 @@ router.get('/', getUser);
  *         examples:
  *           application/json:
  *             message: "This route demands valid token."
- *     parameters:
- *      - name: Authorization
- *        in: header
- *        description: Bearer token
- *        required: true
- *      - in: body
- *        schema:
- *          type: object
- *          required:
- *           - email
- *           - password
- *           - nickname
- *          properties:
- *            email: 
- *              type: string
- *              default: test_user@gmail.com
- *            password:
- *              type: string
- *              default: test_userPASSWORD123
- *            nickname:
- *              type: string
- *              default: test_user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *              - email
+ *              - password
+ *              - nickname
+ *             properties:
+ *               email: 
+ *                 type: string
+ *                 default: test_user@gmail.com
+ *               password:
+ *                 type: string
+ *                 default: test_userPASSWORD123
+ *               nickname:
+ *                 type: string
+ *                 default: test_user
+ *     security:
+ *       - bearerAuth: []
  */
 router.put('/', putUser);
 
@@ -104,11 +101,8 @@ router.put('/', putUser);
  *         examples:
  *           application/json:
  *             message: "This route demands valid token."
- *     parameters:
- *      - name: Authorization
- *        in: header
- *        description: Bearer token
- *        required: true
+ *     security:
+ *       - bearerAuth: []
  */
 router.delete('/', deleteUser);
 

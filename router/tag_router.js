@@ -27,24 +27,25 @@ const router = Router();
  *           application/json:
  *                error_message: "Invalid request. You should provide valid json with 'name' and 'sortOrder' fields."
  *                error_code: 9
- *     parameters:
- *      - name: Authorization
- *        in: header
- *        description: Bearer token
- *        required: true
- *      - in: body
- *        schema:
- *          type: object
- *          required:
- *           - name
- *           - sortOrder
- *          properties:
- *            name: 
- *              type: string
- *              default: new_tag
- *            sortOrder:
- *              type: string
- *              default: "0"
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *              - name
+ *              - sortOrder
+ *             properties:
+ *               name: 
+ *                 type: string
+ *               sortOrder:
+ *                 type: string
+ *             example:
+ *               name: new_tag
+ *               sortOrder: "0"
+ *     security:
+ *       - bearerAuth: []
  */
 router.post('/', postTag);
 
@@ -74,16 +75,14 @@ router.post('/', postTag);
  *                error_message: "Invalid tag id."
  *                error_code: 11
  *     parameters:
- *      - name: Authorization
- *        in: header
- *        description: Bearer token
- *        required: true
  *      - name: id
  *        in: path
  *        description: Tag id
  *        required: true
  *        type: integer
  *        format: int64
+ *     security:
+ *       - bearerAuth: []
  */
 router.get('/:id', getTag);
 
@@ -102,10 +101,6 @@ router.get('/:id', getTag);
  *       400:
  *         description: Invalid json or token
  *     parameters:
- *      - name: Authorization
- *        in: header
- *        description: Bearer token
- *        required: true
  *      - name: sortByOrder
  *        in: query
  *        description: Sort list by order
@@ -118,6 +113,8 @@ router.get('/:id', getTag);
  *      - name: length
  *        in: query
  *        description: Length
+ *     security:
+ *       - bearerAuth: []
  */
 router.get('/', getTagList);
 
@@ -145,26 +142,27 @@ router.get('/', getTagList);
  *                error_message: Tag with given id belongs to another user or doesn't exist."
  *                error_code: 12
  *     parameters:
- *      - name: Authorization
- *        in: header
- *        description: Bearer token
- *        required: true
  *      - name: id
  *        in: path
  *        description: Tag id
  *        required: true
  *        type: integer
  *        format: int64
- *      - in: body
- *        schema:
- *          type: object
- *          properties:
- *            name: 
- *              type: string
- *              default: new_tag_alter
- *            sortOrder:
- *              type: string
- *              default: "2"
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name: 
+ *                 type: string
+ *                 default: new_tag_alter
+ *               sortOrder:
+ *                 type: string
+ *                 default: "2"
+ *     security:
+ *       - bearerAuth: []
  */
 router.put('/:id', putTag)
 
@@ -190,16 +188,13 @@ router.put('/:id', putTag)
  *             error_message: Tag with given id belongs to another user or doesn't exist."
  *             error_code: 12
  *     parameters:
- *      - name: Authorization
- *        in: header
- *        description: Bearer token
- *        required: true
- *      - name: id
  *        in: path
  *        description: Tag id
  *        required: true
  *        type: integer
  *        format: int64
+ *     security:
+ *       - bearerAuth: []
  */
 router.delete('/:id', deleteTag)
 

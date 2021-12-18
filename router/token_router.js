@@ -16,11 +16,8 @@ const router = Router();
  *         description: Successful operetion
  *       400:
  *         description: Invalid token
- *     parameters:
- *      - name: Authorization
- *        in: header
- *        description: Bearer token
- *        required: true
+ *     security:
+ *       - bearerAuth: []
  */
 router.get('/', updateToken);
 

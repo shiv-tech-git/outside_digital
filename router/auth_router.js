@@ -5,7 +5,15 @@ const { checkToken } = require('../middleware/auth_middleware');
 const router = Router();
 
 
-
+/**
+ * @openapi
+ * components:
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
+ */
 
 
 /**
@@ -30,24 +38,27 @@ const router = Router();
  *           application/json:
  *             error_message: "Invalid request. You should provide valid json with 'email', 'password' and 'nickname' fields."
  *             error_code: 2
- *     parameters:
- *      - in: body
- *        schema:
- *          type: object
- *          required:
- *           - email
- *           - password
- *           - nickname
- *          properties:
- *            email: 
- *              type: string
- *              default: test_user@gmail.com
- *            password:
- *              type: string
- *              default: test_userPASSWORD123
- *            nickname:
- *              type: string
- *              default: test_user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *              - email
+ *              - password
+ *              - nickname
+ *             properties:
+ *               email: 
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               nickname:
+ *                 type: string
+ *             example:
+ *               email: test_user@gmail.com
+ *               password: test_userPASSWORD123
+ *               nickname: test_user
  */
 router.post('/signin', signin);
 
@@ -73,21 +84,24 @@ router.post('/signin', signin);
  *           application/json:
  *             error_message: "Invalid login or password."
  *             error_code: 5
- *     parameters:
- *      - in: body
- *        schema:
- *          type: object
- *          required:
- *           - email
- *           - password
- *           - nickname
- *          properties:
- *            email: 
- *              type: string
- *              default: test_user@gmail.com
- *            password:
- *              type: string
- *              default: test_userPASSWORD123
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *              - email
+ *              - password
+ *             properties:
+ *               email: 
+ *                 type: string
+ *               password:
+ *                 type: string
+ *             example:
+ *               email: test_user@gmail.com
+ *               password: test_userPASSWORD123
+ *        
  */
 router.post('/login', login);
 
@@ -111,11 +125,8 @@ router.post('/login', login);
  *         examples:
  *           application/json:
  *             message: "This route demands valid token."
- *     parameters:
- *      - name: Authorization
- *        in: header
- *        description: Bearer token
- *        required: true
+ *     security:
+ *       - bearerAuth: []
  */
 router.post('/logout', checkToken, logout);
 

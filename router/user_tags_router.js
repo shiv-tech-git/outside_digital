@@ -2,6 +2,8 @@ const { Router } = require('express');
 const { postUserTag, deleteUserTag, myTags } = require('../controller/user_tags_controllers');
 const router = Router();
 
+
+
 /**
  * @swagger
  * /user/tag:
@@ -36,18 +38,23 @@ const router = Router();
  *        in: header
  *        description: Bearer token
  *        required: true
- *      - in: body
- *        description: The user to create.
- *        schema:
- *          type: object
- *          required:
- *           - tags
- *          properties:
- *            tags:
- *              type: array
- *              items:
- *                type: integer
- *                default: [1, 2]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *              - tags
+ *             properties:
+ *               tags:
+ *                 type: array
+ *                 items:
+ *                   type: integer
+ *             example:
+ *               tags: [1, 2]
+ *     security:
+ *       - bearerAuth: []
  */ 
 router.post('/', postUserTag);
 
@@ -87,6 +94,8 @@ router.post('/', postUserTag);
  *        description: Tag id
  *        required: true
  *        type: integer
+ *     security:
+ *       - bearerAuth: []
  */ 
 router.delete('/:id', deleteUserTag);
 
@@ -96,8 +105,6 @@ router.delete('/:id', deleteUserTag);
  *   get:
  *     tags:
  *      - user tag
- *     produces:
- *       - application/json
  *     description: Return tags that been created by user
  *     responses:
  *       200:
@@ -116,11 +123,8 @@ router.delete('/:id', deleteUserTag);
  *         examples:
  *           application/json:
  *             message: "This route demands valid token."
- *     parameters:
- *      - name: Authorization
- *        in: header
- *        description: Bearer token
- *        required: true
+ *     security:
+ *       - bearerAuth: []
  */ 
 router.get('/my', myTags);
 
